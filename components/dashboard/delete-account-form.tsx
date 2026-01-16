@@ -58,7 +58,7 @@ export function DeleteAccountForm() {
             <CardFooter className="flex justify-end bg-red-50/50 p-4 dark:bg-red-900/10">
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button variant="destructive" disabled={loading}>
+                        <Button variant="destructive" disabled={loading} className="!cursor-pointer">
                             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             <Trash2 className="mr-2 h-4 w-4" />
                             Delete Account

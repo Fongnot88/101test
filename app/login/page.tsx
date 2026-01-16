@@ -1,8 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { LoginForm } from "@/components/auth/login-form"
-import { RegisterForm } from "@/components/auth/register-form"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { AuthTabs } from "@/components/auth/auth-tabs"
 import { Suspense } from "react"
 
 export const metadata: Metadata = {
@@ -10,10 +8,18 @@ export const metadata: Metadata = {
   description: "Authentication forms",
 }
 
-export default function LoginPage() {
+// ... imports
+
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+
+export default async function LoginPage(props: { searchParams: SearchParams }) {
+  const searchParams = await props.searchParams
+  const defaultTab = searchParams.tab === "register" ? "register" : "login"
+
   return (
     <div className="container relative flex h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+        {/* ... */}
         <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center text-lg font-medium">
           <Link href="/">
@@ -40,20 +46,10 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <Suspense fallback={<div>Loading...</div>}>
-            <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="register">Register</TabsTrigger>
-              </TabsList>
-              <TabsContent value="login">
-                <LoginForm />
-              </TabsContent>
-              <TabsContent value="register">
-                <RegisterForm />
-              </TabsContent>
-            </Tabs>
-          </Suspense>
+
+          <AuthTabs defaultTab={defaultTab} />
+
+          {/* ... */}
 
           <p className="px-8 text-center text-sm text-muted-foreground">
             <Link

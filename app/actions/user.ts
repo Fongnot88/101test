@@ -7,6 +7,9 @@ import { auth, signOut } from "@/lib/auth"
 
 // ... existing updatePassword function
 
+// ... imports
+// ... imports
+
 export async function deleteUser() {
   const session = await auth()
 
@@ -16,12 +19,12 @@ export async function deleteUser() {
 
   try {
     await db.delete(users).where(eq(users.id, session.user.id))
-    await signOut({ redirect: true, redirectTo: "/" })
-    return { success: true }
   } catch (error) {
     console.error("Delete user error:", error)
     return { error: "Failed to delete account" }
   }
+
+  await signOut({ redirect: true, redirectTo: "/login?tab=register" })
 }
 import { eq } from "drizzle-orm"
 import { hash } from "bcryptjs"
