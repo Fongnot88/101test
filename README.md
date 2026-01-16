@@ -61,6 +61,11 @@ A modern, production-ready Full-Stack Boilerplate built for speed, performance, 
     ```
     Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+6.  **Login with Demo Credentials:**
+    - **Email:** `demo@demo.com`
+    - **Password:** `demo`
+    *(You can reset this anytime by running `npm run db:seed`)*
+
 ## 📂 Project Structure
 
 ```bash
