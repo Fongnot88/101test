@@ -1,0 +1,45 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "101test API",
+    "version": "1.0.0",
+    "description": "API Documentation for 101test SaaS Boilerplate"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Local Development Server"
+    }
+  ],
+  "paths": {
+    "/auth/session": {
+      "get": {
+        "summary": "Get current session",
+        "description": "Returns the authenticated user's session data.",
+        "responses": {
+          "200": {
+            "description": "Session object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "name": { "type": "string" },
+                        "email": { "type": "string" },
+                        "image": { "type": "string" }
+                      }
+                    },
+                    "expires": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
