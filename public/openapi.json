@@ -3,7 +3,7 @@
   "info": {
     "title": "101test API",
     "version": "1.0.0",
-    "description": "API Documentation for 101test SaaS Boilerplate"
+    "description": "API Documentation for 101test SaaS Boilerplate. Note: Core features like Registration and Profile Management use Next.js Server Actions and are not exposed as REST endpoints."
   },
   "servers": [
     {
@@ -14,6 +14,9 @@
   "paths": {
     "/auth/session": {
       "get": {
+        "tags": [
+          "Authentication"
+        ],
         "summary": "Get current session",
         "description": "Returns the authenticated user's session data.",
         "responses": {
@@ -27,12 +30,213 @@
                     "user": {
                       "type": "object",
                       "properties": {
-                        "name": { "type": "string" },
-                        "email": { "type": "string" },
-                        "image": { "type": "string" }
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "type": "string"
+                        }
                       }
                     },
-                    "expires": { "type": "string" }
+                    "expires": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/csrf": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Get CSRF Token",
+        "description": "Returns the CSRF token required for state-changing requests like signin/signout.",
+        "responses": {
+          "200": {
+            "description": "CSRF Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "csrfToken": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/providers": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Get Auth Providers",
+        "description": "Returns a list of configured authentication providers (e.g. Credentials, Google).",
+        "responses": {
+          "200": {
+            "description": "List of providers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "signinUrl": {
+                        "type": "string"
+                      },
+                      "callbackUrl": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/callback/credentials": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Sign In with Credentials",
+        "description": "Authenticates a user using email and password.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "csrfToken": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "csrfToken",
+                  "email",
+                  "password"
+                ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "csrfToken": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Sign In (Redirects or returns URL)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "Redirect URL on success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication Failed"
+          }
+        }
+      }
+    },
+    "/auth/signout": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Sign Out",
+        "description": "Signs out the current user.",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "csrfToken": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "csrfToken": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signed out successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    }
                   }
                 }
               }
