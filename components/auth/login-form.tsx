@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { signIn } from "next-auth/react"
 import { useForm } from "react-hook-form"
@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Loader2 } from "lucide-react"
+import { Loader2, AlertCircle } from "lucide-react"
 
 const userAuthSchema = z.object({
   email: z.string().email(),
@@ -23,6 +23,7 @@ type FormData = z.infer<typeof userAuthSchema>
 interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function LoginForm({ className, ...props }: LoginFormProps) {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -35,23 +36,28 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
     }
   })
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const [error, setError] = React.useState<string | null>(null)
   const searchParams = useSearchParams()
 
   async function onSubmit(data: FormData) {
     setIsLoading(true)
+    setError(null)
 
     const signInResult = await signIn("credentials", {
       email: data.email.toLowerCase(),
       password: data.password,
-      redirect: true,
+      redirect: false,
       callbackUrl: "/dashboard",
     })
 
     setIsLoading(false)
 
-    if (!signInResult?.ok) {
-      // Handle error (toast or alert)
-      console.error("Login failed")
+    if (signInResult?.error) {
+       setError("Invalid email or password")
+    } else if (signInResult?.ok) {
+       router.push("/dashboard")
+    } else {
+       setError("Something went wrong. Please try again.")
     }
   }
 
@@ -59,6 +65,12 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
     <div className={cn("grid gap-6", className)} {...props}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-2">
+          {error && (
+             <div className="flex items-center gap-2 p-3 text-sm text-red-500 bg-red-50 rounded-md border border-red-200">
+                <AlertCircle className="h-4 w-4" />
+                <span>{error}</span>
+             </div>
+          )}
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
               Email

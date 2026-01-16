@@ -1,0 +1,5 @@
+- [x] Install dev dependencies: `vitest`, `@testing-library/react`, `@testing-library/dom`, `jsdom`. <!-- validation: `npm list vitest` -->
+- [x] Configure `vitest.config.mts` for the project. <!-- validation: `ls vitest.config.mts` -->
+- [x] Refactor `components/auth/login-form.tsx` to use `redirect: false` and `useRouter`. <!-- validation: `grep 'redirect: false' components/auth/login-form.tsx` -->
+- [x] Implement error state display in `components/auth/login-form.tsx`. <!-- validation: visual or code review -->
+- [x] Create test file `components/auth/__tests__/login-form.test.tsx` verifying validation and submission. <!-- validation: `npm run test` -->
