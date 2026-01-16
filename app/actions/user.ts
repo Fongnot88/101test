@@ -2,14 +2,34 @@
 
 import { db } from "@/lib/db"
 import { users } from "@/lib/schema"
-import { auth } from "@/lib/auth"
+// ... existing code
+import { auth, signOut } from "@/lib/auth"
+
+// ... existing updatePassword function
+
+export async function deleteUser() {
+  const session = await auth()
+
+  if (!session?.user?.id) {
+    return { error: "Unauthorized" }
+  }
+
+  try {
+    await db.delete(users).where(eq(users.id, session.user.id))
+    await signOut({ redirect: true, redirectTo: "/" })
+    return { success: true }
+  } catch (error) {
+    console.error("Delete user error:", error)
+    return { error: "Failed to delete account" }
+  }
+}
 import { eq } from "drizzle-orm"
 import { hash } from "bcryptjs"
 import { revalidatePath } from "next/cache"
 
 export async function updateProfile(data: { name: string }) {
   const session = await auth()
-  
+
   if (!session?.user?.id) {
     return { error: "Unauthorized" }
   }
@@ -35,7 +55,7 @@ export async function updatePassword(password: string) {
 
   try {
     const hashedPassword = await hash(password, 10)
-    
+
     await db.update(users)
       .set({ password: hashedPassword })
       .where(eq(users.id, session.user.id))

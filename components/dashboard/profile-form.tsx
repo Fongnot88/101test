@@ -29,9 +29,9 @@ export function ProfileForm({ user }: { user: any }) {
   async function onSubmit(data: z.infer<typeof profileSchema>) {
     setLoading(true)
     setMessage("")
-    
+
     const result = await updateProfile(data)
-    
+
     if (result.error) {
       setMessage("Error updating profile")
     } else {
@@ -56,7 +56,7 @@ export function ProfileForm({ user }: { user: any }) {
           <div className="grid gap-2">
             <Label htmlFor="name">Display Name</Label>
             <Input id="name" {...register("name")} />
-            {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+            {errors.name && <p className="text-sm text-red-500">{errors.name.message as string}</p>}
           </div>
           <Button disabled={loading}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

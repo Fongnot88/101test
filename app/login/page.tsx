@@ -1,10 +1,13 @@
 import { Metadata } from "next"
 import Link from "next/link"
 import { LoginForm } from "@/components/auth/login-form"
+import { RegisterForm } from "@/components/auth/register-form"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Suspense } from "react"
 
 export const metadata: Metadata = {
-  title: "Login | 101test",
-  description: "Login to your account",
+  title: "Authentication | 101test",
+  description: "Authentication forms",
 }
 
 export default function LoginPage() {
@@ -30,13 +33,28 @@ export default function LoginPage() {
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">
-              Welcome back
+              Get Started
             </h1>
             <p className="text-sm text-muted-foreground">
-              Enter your email to sign in to your account
+              Enter your email to sign in or create an account
             </p>
           </div>
-          <LoginForm />
+
+          <Suspense fallback={<div>Loading...</div>}>
+            <Tabs defaultValue="login" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="login">Login</TabsTrigger>
+                <TabsTrigger value="register">Register</TabsTrigger>
+              </TabsList>
+              <TabsContent value="login">
+                <LoginForm />
+              </TabsContent>
+              <TabsContent value="register">
+                <RegisterForm />
+              </TabsContent>
+            </Tabs>
+          </Suspense>
+
           <p className="px-8 text-center text-sm text-muted-foreground">
             <Link
               href="/"

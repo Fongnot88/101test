@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth"
 import { ProfileForm } from "@/components/dashboard/profile-form"
 import { PasswordForm } from "@/components/dashboard/password-form"
 import { Separator } from "@/components/ui/separator"
-
+import { DeleteAccountForm } from "@/components/dashboard/delete-account-form"
 export default async function ProfilePage() {
   const session = await auth()
 
@@ -18,6 +18,7 @@ export default async function ProfilePage() {
       <div className="grid gap-8">
         <ProfileForm user={session?.user} />
         <PasswordForm />
+        <DeleteAccountForm />
       </div>
     </div>
   )
