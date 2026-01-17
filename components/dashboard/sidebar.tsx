@@ -3,7 +3,8 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, User, BookOpen } from "lucide-react"
+import { LayoutDashboard, User, BookOpen, LogOut } from "lucide-react"
+import { signOut } from "next-auth/react"
 
 const sidebarItems = [
   {
@@ -44,6 +45,15 @@ export function DashboardSidebar() {
           </Link>
         )
       })}
+      <button
+        onClick={() => signOut({ callbackUrl: "/" })}
+        className={cn(
+          "group flex w-full items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
+        )}
+      >
+        <LogOut className="mr-2 h-4 w-4" />
+        <span>Log out</span>
+      </button>
     </nav>
   )
 }
