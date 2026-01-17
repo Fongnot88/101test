@@ -18,6 +18,7 @@ export const users = pgTable("user", {
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     image: text("image"),
     password: text("password"), // Added for credentials provider
+    username: text("username").unique(),
 })
 
 export const accounts = pgTable(

@@ -15,6 +15,7 @@ import { Loader2, AlertCircle, CheckCircle } from "lucide-react"
 import { registerAction } from "@/app/actions/register"
 
 const registerSchema = z.object({
+    username: z.string().min(3, "Username must be at least 3 characters").regex(/^[a-zA-Z0-9_]+$/, "Username must contain only letters, numbers, and underscores"),
     email: z.string().email(),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
@@ -46,6 +47,7 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
         setSuccess(false)
 
         const formData = new FormData()
+        formData.append("username", data.username)
         formData.append("email", data.email)
         formData.append("password", data.password)
         formData.append("confirmPassword", data.confirmPassword)
@@ -60,7 +62,7 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
             setSuccess(true)
 
             const signInResult = await signIn("credentials", {
-                email: data.email.toLowerCase(),
+                email: data.email.toLowerCase(), // Use email for auto-login after register for simplicity, or we can use username if we update auth logic first
                 password: data.password,
                 redirect: false,
                 callbackUrl: "/dashboard",
@@ -90,6 +92,27 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
                             <span>Account created! Please sign in.</span>
                         </div>
                     )}
+
+                    <div className="grid gap-1">
+                        <Label className="sr-only" htmlFor="username">
+                            Username
+                        </Label>
+                        <Input
+                            id="username"
+                            placeholder="Username"
+                            type="text"
+                            autoCapitalize="none"
+                            autoComplete="username"
+                            autoCorrect="off"
+                            disabled={isLoading}
+                            {...register("username")}
+                        />
+                        {errors?.username && (
+                            <p className="px-1 text-xs text-red-600">
+                                {errors.username.message}
+                            </p>
+                        )}
+                    </div>
 
                     <div className="grid gap-1">
                         <Label className="sr-only" htmlFor="email">

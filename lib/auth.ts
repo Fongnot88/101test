@@ -11,7 +11,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
         Credentials({
             credentials: {
-                email: { label: "Email", type: "email" },
+                email: { label: "Email or Username", type: "text" },
                 password: { label: "Password", type: "password" },
             },
             authorize: async (credentials) => {
@@ -20,7 +20,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 }
 
                 const user = await db.query.users.findFirst({
-                    where: eq(users.email, String(credentials.email)),
+                    where: (users, { or, eq }) => or(
+                        eq(users.email, String(credentials.email).toLowerCase()),
+                        eq(users.username, String(credentials.email)) // Allow login with username via email field
+                    ),
                 })
 
                 if (!user || !user.password) {

@@ -14,13 +14,13 @@ import { Label } from "@/components/ui/label"
 import { Loader2, AlertCircle } from "lucide-react"
 
 const userAuthSchema = z.object({
-  email: z.string().email(),
+  email: z.string().min(1, "Email or Username is required"), // Changed from .email() to allow usernames
   password: z.string().min(1, "Password is required"),
 })
 
 type FormData = z.infer<typeof userAuthSchema>
 
-interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function LoginForm({ className, ...props }: LoginFormProps) {
   const router = useRouter()
@@ -31,8 +31,8 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
   } = useForm<FormData>({
     resolver: zodResolver(userAuthSchema),
     defaultValues: {
-        email: "demo@demo.com",
-        password: "demo",
+      email: "",
+      password: "",
     }
   })
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
@@ -44,7 +44,7 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
     setError(null)
 
     const signInResult = await signIn("credentials", {
-      email: data.email.toLowerCase(),
+      email: data.email, // Can be email or username
       password: data.password,
       redirect: false,
       callbackUrl: "/dashboard",
@@ -53,11 +53,11 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
     setIsLoading(false)
 
     if (signInResult?.error) {
-       setError("Invalid email or password")
+      setError("Invalid credentials")
     } else if (signInResult?.ok) {
-       router.push("/dashboard")
+      router.push("/dashboard")
     } else {
-       setError("Something went wrong. Please try again.")
+      setError("Something went wrong. Please try again.")
     }
   }
 
@@ -66,21 +66,21 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-2">
           {error && (
-             <div className="flex items-center gap-2 p-3 text-sm text-red-500 bg-red-50 rounded-md border border-red-200">
-                <AlertCircle className="h-4 w-4" />
-                <span>{error}</span>
-             </div>
+            <div className="flex items-center gap-2 p-3 text-sm text-red-500 bg-red-50 rounded-md border border-red-200">
+              <AlertCircle className="h-4 w-4" />
+              <span>{error}</span>
+            </div>
           )}
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
-              Email
+              Email or Username
             </Label>
             <Input
               id="email"
-              placeholder="name@example.com"
-              type="email"
+              placeholder="Email or Username"
+              type="text" // Changed from email to text
               autoCapitalize="none"
-              autoComplete="email"
+              autoComplete="username"
               autoCorrect="off"
               disabled={isLoading}
               {...register("email")}
@@ -114,7 +114,7 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
             {isLoading && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Sign In with Email
+            Sign In
           </Button>
         </div>
       </form>

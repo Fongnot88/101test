@@ -15,11 +15,20 @@ A modern, production-ready Full-Stack Boilerplate built for speed, performance, 
 
 ## 🛠️ Tech Stack
 
-- **Core:** Next.js 16, React 19
-- **Database:** Postgres, Drizzle Kit
-- **State:** TanStack Query, Zustand
-- **Forms:** React Hook Form, Zod
+- **Core:** Next.js 16.1.2, React 19
+- **Database:** PostgreSQL (`postgres`), Drizzle ORM v0.45.1, Drizzle Kit v0.31.8
+- **Authentication:** NextAuth v5 (Auth.js) Beta
+- **State:** TanStack Query v5, Zustand v5
+- **Forms:** React Hook Form, Zod v4
 - **Utils:** Lucide React, Geist Font
+
+## 📏 Project Conventions
+
+- **File Naming:** Strictly `kebab-case` for all files and folders.
+- **Imports:** Use absolute imports `@/` where possible.
+- **Server Actions:** Prefer Next.js Server Actions for data mutations.
+- **Type Safety:** Strict TypeScript usage.
+- **Validation:** Always validate form inputs with Zod schemas.
 
 ## 📦 Getting Started
 
